@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Почати інвестувати та аналізувати акції за допомогою ШІ</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Mulish:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0C2461;--navy-mid:#1e3fa8;--navy-light:#185FA5;--blue-pale:#E6F1FB;--accent:#FFD166;--white:#ffffff;--off-white:#F8F9FC;--text:#12192C;--text-muted:#5A6882;--border:rgba(12,36,97,0.12)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Mulish',sans-serif;background:var(--off-white);color:var(--text);min-height:100vh}
+
+#password-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy);padding:2rem;position:relative;overflow:hidden}
+#password-screen::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(30,63,168,0.4) 0%,transparent 60%),radial-gradient(circle at 80% 20%,rgba(24,95,165,0.3) 0%,transparent 50%)}
+.pwd-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:3rem 2.5rem;max-width:420px;width:100%;text-align:center;position:relative;z-index:1}
+.pwd-card h1{font-family:'Unbounded',sans-serif;font-size:18px;color:var(--white);line-height:1.4;margin-bottom:8px}
+.pwd-card p{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:2rem}
+.pwd-card input{width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:14px 18px;font-size:15px;color:var(--white);font-family:'Mulish',sans-serif;margin-bottom:12px;outline:none;letter-spacing:0.1em;transition:border-color 0.2s}
+.pwd-card input::placeholder{color:rgba(255,255,255,0.3);letter-spacing:0}
+.pwd-card input:focus{border-color:var(--accent)}
+.pwd-card button{width:100%;background:var(--accent);color:var(--navy);border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;font-family:'Unbounded',sans-serif;cursor:pointer;transition:opacity 0.2s}
+.pwd-card button:hover{opacity:0.9}
+.err{font-size:13px;color:#FF6B6B;margin-top:10px;display:none}
+
+#course-page{display:none}
+
+.hero{background:var(--navy);padding:3rem 1.5rem 2.5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 10% 50%,rgba(30,63,168,0.5) 0%,transparent 60%),radial-gradient(circle at 90% 10%,rgba(24,95,165,0.4) 0%,transparent 50%)}
+.hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{display:inline-block;background:rgba(255,209,102,0.15);border:1px solid rgba(255,209,102,0.3);color:var(--accent);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.25rem}
+.hero h1{font-family:'Unbounded',sans-serif;font-size:clamp(20px,4vw,28px);color:var(--white);line-height:1.3;margin-bottom:1rem}
+.hero-meta{display:flex;gap:1.5rem;flex-wrap:wrap}
+.hero-meta span{font-size:13px;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:6px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+
+.content{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem}
+
+.welcome{background:var(--blue-pale);border-left:4px solid var(--navy-light);padding:14px 20px;margin:1.5rem 0;border-radius:0 10px 10px 0}
+.welcome p{font-size:14px;color:var(--navy);line-height:1.6}
+
+.sec-label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:2rem 0 1rem}
+
+.bcard{background:var(--white);border-radius:16px;border:1px solid var(--border);margin-bottom:12px;overflow:hidden;transition:box-shadow 0.2s}
+.bcard:hover{box-shadow:0 4px 20px rgba(12,36,97,0.08)}
+.bhead{padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none}
+.bicon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.b1 .bicon{background:#EEF2FF}
+.b2 .bicon{background:#E0F2FE}
+.b3 .bicon{background:#FEF3C7}
+.b4 .bicon{background:#FCE7F3}
+.binfo{flex:1}
+.bname{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.bdesc{font-size:12px;color:var(--text-muted);margin-top:3px}
+.bbadge{font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+.b1 .bbadge{background:#EEF2FF;color:#3730A3}
+.b2 .bbadge{background:#E0F2FE;color:#0369A1}
+.b3 .bbadge{background:#FEF3C7;color:#92400E}
+.b4 .bbadge{background:#FCE7F3;color:#9D174D}
+.barr{font-size:18px;color:var(--text-muted);transition:transform 0.25s;margin-left:8px}
+.bcard.open .barr{transform:rotate(90deg)}
+
+.lessons{display:none;border-top:1px solid var(--border)}
+.bcard.open .lessons{display:block}
+
+.litem{border-bottom:1px solid var(--border)}
+.litem:last-child{border-bottom:none}
+.lhead{display:flex;align-items:center;gap:12px;padding:13px 20px;cursor:pointer;transition:background 0.15s}
+.lhead:hover{background:var(--off-white)}
+.lnum{font-size:11px;color:var(--text-muted);min-width:22px}
+.ltitle{font-size:14px;color:var(--text);flex:1;font-weight:500}
+.ltag{font-size:11px;color:var(--text-muted);white-space:nowrap}
+.larr{font-size:14px;color:var(--text-muted);transition:transform 0.2s;margin-left:4px}
+.litem.open .larr{transform:rotate(90deg)}
+
+.lcontent{display:none;padding:0 20px 20px 54px}
+.litem.open .lcontent{display:block}
+.lcontent p{font-size:14px;line-height:1.8;color:var(--text);margin-bottom:1rem}
+.lcontent h3{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--navy);margin:1.5rem 0 0.75rem}
+.lcontent ul,.lcontent ol{padding-left:1.25rem;margin-bottom:1rem}
+.lcontent li{font-size:14px;line-height:1.8;color:var(--text);margin-bottom:4px}
+.lcontent strong{font-weight:600;color:var(--navy)}
+.hl{background:var(--blue-pale);border-left:3px solid var(--navy-light);padding:12px 16px;border-radius:0 8px 8px 0;margin:1rem 0;font-size:14px;line-height:1.7;color:var(--navy)}
+.wn{background:#FFF8E1;border-left:3px solid #F59E0B;padding:10px 14px;border-radius:0 8px 8px 0;margin:8px 0;font-size:13px;line-height:1.6;color:#78350F}
+.lcontent table{width:100%;border-collapse:collapse;font-size:13px;margin:1rem 0}
+.lcontent th{background:var(--navy);color:var(--white);padding:8px 12px;text-align:left;font-weight:600}
+.lcontent td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+.lcontent tr:nth-child(even) td{background:var(--off-white)}
+.vph{background:var(--navy);border-radius:12px;padding:2rem;text-align:center;margin:1rem 0;color:rgba(255,255,255,0.6);font-size:13px}
+.vph .play{font-size:32px;margin-bottom:8px}
+
+.bgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:8px}
+.bbonus{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:flex-start;gap:10px}
+.bbonus-icon{font-size:20px;flex-shrink:0}
+.bbonus-text{font-size:13px;color:var(--text-muted);line-height:1.4}
+
+.footer{background:var(--navy);padding:1.5rem;text-align:center;font-size:12px;color:rgba(255,255,255,0.4)}
+</style>
+</head>
+<body>
+
+<div id="password-screen">
+  <div class="pwd-card">
+    <div style="font-size:40px;margin-bottom:1.5rem">🔐</div>
+    <h1>Курс з інвестування та ШІ-аналізу</h1>
+    <p>Введи пароль щоб отримати доступ до матеріалів</p>
+    <input type="password" id="pi" placeholder="Введи пароль..." onkeydown="if(event.key==='Enter')chk()">
+    <button onclick="chk()">Увійти →</button>
+    <div class="err" id="er">Невірний пароль. Спробуй ще раз.</div>
+  </div>
+</div>
+
+<div id="course-page">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag">Онлайн-практикум · Freedom24</div>
+      <h1>Почати інвестувати та аналізувати акції за допомогою ШІ</h1>
+      <div class="hero-meta">
+        <span><span class="dot"></span>15 уроків · 4 блоки</span>
+        <span><span class="dot"></span>Тамара Карновська</span>
+        <span><span class="dot"></span>Доступ назавжди</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="welcome"><p>👋 Вітаємо на курсі! Всі уроки відкриті одразу — проходь у зручному темпі. Питання — у закритий Telegram-канал.</p></div>
+
+    <div class="sec-label">Програма курсу</div>
+
+    <div class="bcard b1" id="b1">
+      <div class="bhead" onclick="tb('b1')">
+        <div class="bicon">📚</div>
+        <div class="binfo"><div class="bname">Блок 1 — Основи та старт</div><div class="bdesc">Теорія + перші кроки · 4 уроки</div></div>
+        <span class="bbadge">Старт</span><span class="barr">›</span>
+      </div>
+      <div class="lessons">
+
+        <div class="litem" id="l1">
+          <div class="lhead" onclick="tl('l1')"><span class="lnum">01</span><span class="ltitle">Теорія інвестицій: що це і навіщо</span><span class="ltag">📄 Текст</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Раніше була негласна угода: працюй на заводі, отримуй пенсію, живи як усі, і будеш у безпеці. Бідність була нормою і навіть захистом. Не висовуйся, не ризикуй, не втрачай.</p>
+            <p>Але правила змінились.</p>
+            <p>Інфляція з'їдає заощадження швидше, ніж ти їх відкладаєш. Пенсійна система не гарантує гідного життя. А гроші, що лежать на картці — кожен рік коштують менше.</p>
+            <div class="hl">Сьогодні <strong>не інвестувати — це і є ризик.</strong></div>
+            <p>Інвестиції — це не про те, щоб стати мільйонером. Це про те, щоб твої гроші працювали поки ти спиш, подорожуєш або займаєшся улюбленою справою.</p>
+            <p>Хороша новина: починати можна з будь-якою сумою. Головне почати.</p>
+            <p>У цьому курсі ти навчишся відкривати брокерський рахунок, купувати ETF, аналізувати активи за допомогою ШІ і розуміти як це оподатковується в Україні.</p>
+            <p style="font-size:18px">Погнали 🚀</p>
+          </div>
+        </div>
+
+        <div class="litem" id="l2">
+          <div class="lhead" onclick="tl('l2')"><span class="lnum">02</span><span class="ltitle">Знайомство з фондовим ринком</span><span class="ltag">📄 Текст</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Apple, Tesla, Amazon — кожна з них поділена на мільйони маленьких частинок. Ці частинки називаються <strong>акції</strong>. Ти купуєш одну — і стаєш справжнім співвласником компанії. Буквально.</p>
+            <h3>Навіщо компанії продають свої шматочки?</h3>
+            <p>Уяви що ти печеш найсмачніші пиріжки в районі і хочеш відкрити 100 пекарень по всій Україні. Грошей не вистачає. Ти виходиш на біржу і кажеш: «Хто вкладе гроші в мій бізнес — той отримає частку прибутку». Люди вкладають, ти розвиваєшся, всі у виграші. Саме так влаштований фондовий ринок.</p>
+            <h3>Акція — не просто цифра на екрані</h3>
+            <p>Акція — це <strong>юридично твоя власність</strong>. Вона записана на твоє ім'я в реєстрі брокера. Її можна продати, подарувати і навіть <strong>передати дітям у спадок</strong> — так само як квартиру чи автомобіль.</p>
+            <div class="hl">Уоррен Баффет почав купувати акції у <strong>11 років</strong>. Зараз йому 94, його стан — понад 130 мільярдів доларів. Весь секрет: купував хороші компанії і просто не продавав.</div>
+            <h3>Як на цьому заробити?</h3>
+            <ul>
+              <li>🔼 <strong>Акція зросла в ціні:</strong> купив за 100$, продав за 150$. Заробив 50$.</li>
+              <li>💰 <strong>Дивіденди</strong> — компанія поділилась прибутком. Ти просто тримаєш акцію і раз на квартал отримуєш гроші на рахунок.</li>
+              <li>📈 <strong>Складний відсоток</strong> — найпотужніша сила в інвестуванні. Айнштайн називав його «восьмим чудом світу».</li>
+            </ul>
+            <h3>Реальні приклади:</h3>
+            <ul>
+              <li>🍎 <strong>Apple 2010–2024:</strong> вклав 1000$ — понад <strong>150 000$</strong></li>
+              <li>☕ <strong>Starbucks з 1992:</strong> вклав 1000$ — сьогодні <strong>380 000$</strong></li>
+              <li>👟 <strong>Nike за 30 років:</strong> вклав 1000$ — <strong>120 000$</strong></li>
+            </ul>
+            <div class="hl">Ті самі 1000$ під матрацом через 30 років через інфляцію коштують як <strong>300$</strong> сьогоднішніх. Гроші що не працюють — тануть.</div>
+          </div>
+        </div>
+
+        <div class="litem" id="l3">
+          <div class="lhead" onclick="tl('l3')"><span class="lnum">03</span><span class="ltitle">Відкриття брокерського рахунку в Freedom24</span><span class="ltag">🖥 Скриншоти</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Брокер — це посередник між тобою і біржею. Ми працюємо з <strong>Freedom24</strong> — ліцензований європейський брокер. Гроші на рахунку застраховані до <strong>20 000 євро</strong>.</p>
+            <h3>Що підготувати заздалегідь</h3>
+            <ul>
+              <li>📄 Закордонний паспорт</li>
+              <li>📄 ІПН — обов'язково для українців</li>
+              <li>🏠 Підтвердження адреси — виписка з банку на англійській</li>
+              <li>📱 Номер телефону</li>
+              <li>📧 Email</li>
+            </ul>
+            <h3>Покроковий процес</h3>
+            <ol>
+              <li>Заходиш на freedom24.com → «Відкрити рахунок»</li>
+              <li>Вводиш email і пароль</li>
+              <li>Заповнюєш анкету — ім'я, адреса, ІПН</li>
+              <li>Завантажуєш фото документів</li>
+              <li>Проходиш відеоверифікацію</li>
+              <li>Чекаєш підтвердження — до 1 робочого дня</li>
+            </ol>
+            <div class="wn">⚠️ Ім'я і адреса в анкеті мають збігатися з документами буква в букву.</div>
+            <div class="wn">⚠️ Під час відеоверифікації тримай паспорт так щоб були видні всі дані і фото.</div>
+          </div>
+        </div>
+
+        <div class="litem" id="l4">
+          <div class="lhead" onclick="tl('l4')"><span class="lnum">04</span><span class="ltitle">Поповнення рахунку</span><span class="ltag">🖥 Скриншоти</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <div class="vph"><div class="play">🎬</div><p>Урок у розробці — незабаром тут з'явиться відео</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bcard b2" id="b2">
+      <div class="bhead" onclick="tb('b2')">
+        <div class="bicon">📊</div>
+        <div class="binfo"><div class="bname">Блок 2 — Формування портфелю</div><div class="bdesc">Стратегія, ETF, ШІ · 4 уроки</div></div>
+        <span class="bbadge">Практика</span><span class="barr">›</span>
+      </div>
+      <div class="lessons">
+
+        <div class="litem" id="l5">
+          <div class="lhead" onclick="tl('l5')"><span class="lnum">05</span><span class="ltitle">Стратегія та тактика: розбір кейсів</span><span class="ltag">🎬 Відео</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Більшість людей роблять одну помилку — починають з тактики замість стратегії. Купують акцію бо «хтось порадив». А потім дивуються чому портфель не росте.</p>
+            <div class="hl"><strong>Стратегія</strong> — відповідь на «навіщо». <strong>Тактика</strong> — відповідь на «як». Без першого друге не працює.</div>
+            <h3>Крок 1. Визнач свою мету</h3>
+            <ul>
+              <li>🎯 Подушка безпеки на 6-12 місяців</li>
+              <li>🎯 Пасивний дохід через 10-15 років</li>
+              <li>🎯 Накопичення на квартиру/навчання дітей</li>
+              <li>🎯 Захист заощаджень від інфляції</li>
+            </ul>
+            <h3>Крок 2. Визнач горизонт</h3>
+            <ul>
+              <li><strong>До 3 років</strong> — консервативно: облігації, дивідендні акції</li>
+              <li><strong>3–7 років</strong> — помірно: суміш ETF + окремі акції</li>
+              <li><strong>7+ років</strong> — агресивніше: більше акцій, можна крипту</li>
+            </ul>
+            <h3>Три базові стратегії</h3>
+            <p><strong>1. Пасивна</strong> — купуєш широкі ETF і просто тримаєш. 10% річних у доларах.</p>
+            <p><strong>2. Дивідендна</strong> — купуєш акції що платять дивіденди і живеш на пасивний дохід.</p>
+            <p><strong>3. Змішана</strong> — 70% ETF + 20% окремі акції + 10% ризиковані інструменти.</p>
+            <div class="hl"><strong>Час на ринку важливіший ніж момент входу.</strong> Краще купити сьогодні і тримати 10 років ніж чекати ідеального моменту який ніколи не настане.</div>
+          </div>
+        </div>
+
+        <div class="litem" id="l6">
+          <div class="lhead" onclick="tl('l6')"><span class="lnum">06</span><span class="ltitle">Акції, облігації, крипта</span><span class="ltag">🎬 Відео</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <h3>Акції — шматочок бізнесу</h3>
+            <p><strong>Окремі акції</strong> — вища прибутковість але й вищий ризик.<br><strong>Акції через ETF</strong> — для початківця значно безпечніше.</p>
+            <h3>Облігації — позика бізнесу або державі</h3>
+            <p>Купуєш облігацію Apple на 1000$ під 4% річних. Щороку 40$, через 5 років — свої 1000$ назад.</p>
+            <h3>Три моделі портфелю</h3>
+            <table>
+              <tr><th>Тип</th><th>ETF</th><th>Облігації</th><th>Крипта</th></tr>
+              <tr><td>Консервативний</td><td>40%</td><td>60%</td><td>0%</td></tr>
+              <tr><td>Збалансований</td><td>70%</td><td>25%</td><td>5%</td></tr>
+              <tr><td>Агресивний</td><td>85%</td><td>5%</td><td>10%</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="litem" id="l7">
+          <div class="lhead" onclick="tl('l7')"><span class="lnum">07</span><span class="ltitle">ETF: покрокова купівля</span><span class="ltag">🎬 Відео</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <h3>Що таке ETF простими словами</h3>
+            <p>Уяви чизбургер — він містить все одразу: булочка, котлета, овочі, соус. ETF — те саме але для інвестицій. Одна покупка — і ти власниця мікрочастки сотень компаній одночасно.</p>
+            <h3>Чому ETF найкращий для початківця</h3>
+            <ul>
+              <li>✅ Диверсифікація автоматично</li>
+              <li>✅ Мінімальні комісії (0.03–0.20% на рік)</li>
+              <li>✅ 10% річних у доларах за останні 50 років</li>
+              <li>✅ Купив і забув — не треба стежити щодня</li>
+            </ul>
+            <h3>Покрокова купівля у Freedom24</h3>
+            <ol>
+              <li>Заходиш у кабінет Freedom24</li>
+              <li>У пошуку вводиш <strong>VOO</strong> або <strong>SPY</strong></li>
+              <li>Натискаєш «Купити»</li>
+              <li>Вводиш суму в доларах</li>
+              <li>Обираєш тип <strong>Market</strong></li>
+              <li>Підтверджуєш угоду</li>
+            </ol>
+            <div class="hl">З 2014 по 2024 рік — <strong>100$ на місяць</strong> у VOO → вклала <strong>12 000$</strong> → на рахунку <strong>понад 32 000$</strong>. Ринок заробив за тебе ще 20 000$.</div>
+            <div class="wn">⚠️ ETF торгуються з 16:30 до 23:00 за київським часом у будні дні.</div>
+          </div>
+        </div>
+
+        <div class="litem" id="l8">
+          <div class="lhead" onclick="tl('l8')"><span class="lnum">08</span><span class="ltitle">Можливості ШІ: переваги та порівняння</span><span class="ltag">📄 Текст</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Ще 5 років тому для аналізу акцій потрібно було платити аналітику або читати десятки звітів. Сьогодні це робить ШІ за секунди.</p>
+            <h3>Що вміє ШІ</h3>
+            <ul>
+              <li>🔍 Аналіз компанії за секунди</li>
+              <li>📊 Порівняння ETF</li>
+              <li>📰 Фільтрація новин</li>
+              <li>💼 Перевірка свого портфелю</li>
+            </ul>
+            <table>
+              <tr><th>Інструмент</th><th>Для чого</th><th>Ціна</th></tr>
+              <tr><td>ChatGPT / Claude</td><td>Глибокий аналіз</td><td>Безкоштовно / від 20$</td></tr>
+              <tr><td>Perplexity</td><td>Актуальні новини</td><td>Безкоштовно</td></tr>
+              <tr><td>Stock Analysis</td><td>Фінансові показники</td><td>Безкоштовно</td></tr>
+              <tr><td>Simply Wall St</td><td>Візуальний аналіз</td><td>Безкоштовно / від 10$</td></tr>
+            </table>
+            <div class="hl"><strong>Хороший запит:</strong> «Думій як фінансовий аналітик з 20-річним досвідом. Я початківець з горизонтом 10 років. Порівняй VOO і QQQ для моєї ситуації і поясни чому.»</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bcard b3" id="b3">
+      <div class="bhead" onclick="tb('b3')">
+        <div class="bicon">🤖</div>
+        <div class="binfo"><div class="bname">Блок 3 — ШІ-аналіз ETF</div><div class="bdesc">Stock Analysis · Perplexity · Claude · 4 уроки</div></div>
+        <span class="bbadge">ШІ</span><span class="barr">›</span>
+      </div>
+      <div class="lessons">
+
+        <div class="litem" id="l9">
+          <div class="lhead" onclick="tl('l9')"><span class="lnum">09</span><span class="ltitle">Stock Analysis: збираємо цифри</span><span class="ltag">📄 Текст</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Перш ніж аналізувати ETF — потрібні факти. <strong>stockanalysis.com</strong> — безкоштовна база даних, реєстрація не потрібна.</p>
+            <h3>Що дивитись на сторінці ETF</h3>
+            <ul>
+              <li><strong>Performance</strong> — прибутковість за 1, 3, 5, 10 років</li>
+              <li><strong>Expense Ratio</strong> — комісія. Якщо вище 0.5% — питай чи воно того варте</li>
+              <li><strong>AUM</strong> — менше 100 млн$ це ризик закриття фонду</li>
+              <li><strong>Dividend Yield</strong> — дивідендна прибутковість</li>
+              <li><strong>Holdings</strong> — які компанії всередині</li>
+            </ul>
+            <table>
+              <tr><th>ETF</th><th>Комісія</th><th>Прибутк. 5р.</th><th>Дивіденди</th><th>AUM</th></tr>
+              <tr><td>VOO</td><td>0.03%</td><td>~15%</td><td>1.3%</td><td>500 млрд$</td></tr>
+              <tr><td>IWDA</td><td>0.20%</td><td>~12%</td><td>1.1%</td><td>80 млрд$</td></tr>
+              <tr><td>QQQ</td><td>0.20%</td><td>~20%</td><td>0.6%</td><td>250 млрд$</td></tr>
+              <tr><td>SCHD</td><td>0.06%</td><td>~11%</td><td>3.5%</td><td>55 млрд$</td></tr>
+            </table>
+            <div class="hl">Процес аналізу затягне — це як кухня: спочатку купуєш продукти (Stock Analysis), дізнаєшся що свіже (Perplexity), потім готуєш страву (Claude) 🍳</div>
+          </div>
+        </div>
+
+        <div class="litem" id="l10">
+          <div class="lhead" onclick="tl('l10')"><span class="lnum">10</span><span class="ltitle">Perplexity: актуальний контекст</span><span class="ltag">📄 Текст</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Цифри — це минуле. Perplexity допомагає зрозуміти що відбувається зараз. Заходиш на <strong>perplexity.ai</strong> — безкоштовно без реєстрації.</p>
+            <h3>Правильні запити</h3>
+            <p><strong>Огляд ETF:</strong> «Розкажи про IWDA — що це, який індекс відстежує, для кого підходить»</p>
+            <p><strong>Новини:</strong> «Які події можуть вплинути на IWDA та VOO у найближчі 6 місяців?»</p>
+            <p><strong>Порівняння:</strong> «Порівняй IWDA і VOO для початківця з горизонтом 10 років»</p>
+            <table>
+              <tr><th></th><th>IWDA</th><th>VOO</th></tr>
+              <tr><td>Ринок</td><td>Весь світ (23 країни)</td><td>Тільки США</td></tr>
+              <tr><td>Компаній</td><td>1500+</td><td>500</td></tr>
+              <tr><td>Комісія</td><td>0.20%</td><td>0.03%</td></tr>
+              <tr><td>Дивіденди</td><td>~1.1%</td><td>~1.3%</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="litem" id="l11">
+          <div class="lhead" onclick="tl('l11')"><span class="lnum">11</span><span class="ltitle">Claude: фільтруємо і приймаємо рішення</span><span class="ltag">📄 Текст</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <p>Ми зібрали цифри і контекст. Тепер аналізуємо все разом. Відкривай <strong>claude.ai</strong> — є безкоштовний план.</p>
+            <h3>Головний запит</h3>
+            <div class="hl">«Я інвестор-початківець. Мета — захист заощаджень і пасивний дохід через 10 років. Ризик-профіль — помірний. Ось дані по ETF: [таблиця]. З Perplexity дізналась: [тези]. Який розподіл між ETF підходить для моєї ситуації?»</div>
+            <h3>Як зменшити ризик якщо тривожно</h3>
+            <ol>
+              <li>Зменш частку QQQ або агресивних ETF</li>
+              <li>Додай SCHD або облігації BND</li>
+              <li>Почни з меншої суми — спочатку 500$</li>
+              <li>Спрости до двох ETF: 70% IWDA + 30% SCHD</li>
+            </ol>
+            <div class="hl">Найкращий портфель — це той який <strong>не продаси в паніці</strong>. Спокій важливіший за максимальну прибутковість.</div>
+          </div>
+        </div>
+
+        <div class="litem" id="l12">
+          <div class="lhead" onclick="tl('l12')"><span class="lnum">12</span><span class="ltitle">Підсумок: таблиця ETF + огляд ШІ</span><span class="ltag">🖥 Скриншоти</span><span class="larr">›</span></div>
+          <div class="lcontent">
+            <div class="vph"><div class="play">📊</div><p>Урок у розробці — незабаром</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bcard b4" id="b4">
+      <div class="bhead" onclick="tb('b4')">
+        <div class="bicon">📋</div>
+        <div class="binfo"><div class="bname">Блок 4 — Облік і оподаткування</div><div class="bdesc">Практичний фінал · 3 уроки</div></div>
+        <span class="bbadge">Фінал</span><span class="barr">›</span>
+      </div>
+      <div class="lessons">
+        <div class="litem" id="l13">
+          <div class="lhead" onclick="tl('l13')"><span class="lnum">13</span><span class="ltitle">Як порахувати інвестиційний прибуток</span><span class="ltag">🎬 Відео</span><span class="larr">›</span></div>
+          <div class="lcontent"><div class="vph"><div class="play">🎬</div><p>Відео незабаром</p></div></div>
+        </div>
+        <div class="litem" id="l14">
+          <div class="lhead" onclick="tl('l14')"><span class="lnum">14</span><span class="ltitle">Як платити податки з інвестицій</span><span class="ltag">🎬 Відео</span><span class="larr">›</span></div>
+          <div class="lcontent"><div class="vph"><div class="play">🎬</div><p>Відео незабаром</p></div></div>
+        </div>
+        <div class="litem" id="l15">
+          <div class="lhead" onclick="tl('l15')"><span class="lnum">15</span><span class="ltitle">Відеомарафон: закріплення та підсумок</span><span class="ltag">🎬 Відео</span><span class="larr">›</span></div>
+          <div class="lcontent"><div class="vph"><div class="play">🎬</div><p>Відео незабаром</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label">Бонуси курсу</div>
+    <div class="bgrid">
+      <div class="bbonus"><span class="bbonus-icon">📋</span><span class="bbonus-text">Гайд: 20 найстабільніших ETF</span></div>
+      <div class="bbonus"><span class="bbonus-icon">📊</span><span class="bbonus-text">Авторський інвестиційний трекер</span></div>
+      <div class="bbonus"><span class="bbonus-icon">✈️</span><span class="bbonus-text">Воркшоп по відкриттю рахунку</span></div>
+      <div class="bbonus"><span class="bbonus-icon">💬</span><span class="bbonus-text">Закритий Telegram-канал назавжди</span></div>
+      <div class="bbonus"><span class="bbonus-icon">💰</span><span class="bbonus-text">Курс «Планування фінансів»</span></div>
+      <div class="bbonus"><span class="bbonus-icon">🎓</span><span class="bbonus-text">Курс з фінансової грамотності</span></div>
+    </div>
+
+  </div>
+
+  <div class="footer"><p>© 2026 Тамара Карновська · Курс з інвестування та ШІ-аналізу · Всі права захищені</p></div>
+</div>
+
+<script>
+function chk(){
+  const v=document.getElementById('pi').value;
+  if(v==='invest2026'){
+    document.getElementById('password-screen').style.display='none';
+    document.getElementById('course-page').style.display='block';
+  } else {
+    document.getElementById('er').style.display='block';
+    document.getElementById('pi').value='';
+    document.getElementById('pi').focus();
+  }
+}
+function tb(id){document.getElementById(id).classList.toggle('open')}
+function tl(id){document.getElementById(id).classList.toggle('open')}
+</script>
+</body>
+</html>
